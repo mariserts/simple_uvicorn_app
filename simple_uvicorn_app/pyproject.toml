@@ -1,0 +1,8 @@
+[build-system]
+requires = [
+    "jinja2",
+    "setuptools>=42",
+    "uvicorn",
+    "wheel",
+]
+build-backend = "setuptools.build_meta"
