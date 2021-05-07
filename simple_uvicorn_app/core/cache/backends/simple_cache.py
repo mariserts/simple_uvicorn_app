@@ -24,11 +24,7 @@ class SimpleCacheStorage(dict):
     NOT_SET_VALUE = '__simple_cache_storage_key_value_unset__'
 
     def get(self, key):
-        return dict.__getitem__(
-            self,
-            key,
-            self.NOT_SET_VALUE
-        )
+        return dict.__getitem__(self, key)
 
     def set(self, key, value, timeout):
         dict.__setitem__(
@@ -37,11 +33,15 @@ class SimpleCacheStorage(dict):
             SimpleCacheValue(key, value, timeout)
         )
 
+    def __missing__(self, key):
+        return self.NOT_SET_VALUE
+
 
 class SimpleCache:
 
     def __init__(self):
         self.storage = SimpleCacheStorage()
+        self.NOT_SET_VALUE = self.storage.NOT_SET_VALUE
 
     def set(self, key, value, timeout):
         self.storage.set(key, value, timeout)
