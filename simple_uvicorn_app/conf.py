@@ -1,5 +1,8 @@
 class Settings:
 
+    JINJA2_EXTENSIONS = []
+    TEMPLATE_DIRS = ['templates']
+
     @property
     def SUPPORTED_HTTP_METHODS(self):
         return [
@@ -14,9 +17,10 @@ class Settings:
             'trace',
         ]
 
-    @property
-    def TEMPLATE_DIRS(self):
-        return ['templates']
-
 
 settings =  Settings()
+
+
+class ProxySettings:
+    def __getattr__(self, name):
+        return getattr(settings, name, None)

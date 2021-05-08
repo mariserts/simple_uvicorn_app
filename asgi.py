@@ -1,6 +1,6 @@
-from simple_uvicorn_app.core.application import Application
+from simple_uvicorn_app.application import Application
 
-import settings
+from project import settings as project_settings
 
 
-app = Application(router=settings.Router)
+app = Application(extra_settings=project_settings)

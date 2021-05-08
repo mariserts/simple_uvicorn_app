@@ -23,7 +23,10 @@ class BaseTemplate:
 
     @property
     def template_environment(self):
-        return jinja2.Environment(loader=self.loader)
+        return jinja2.Environment(
+            loader=self.loader,
+            extensions=settings.JINJA2_EXTENSIONS,
+        )
 
     @property
     def template_dirs(self):
