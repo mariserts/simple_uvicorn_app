@@ -1,10 +1,10 @@
 import re
 
+from ..cache.utils import get_cache_backend
 from ..views.viewsets import Viewset
 from .conf import settings
 from .responses import NotImplementedResponse, ServerErrorResponse
-from .requests import Request
-from .sessions import Session
+
 
 
 __all__ = [
@@ -42,18 +42,19 @@ class BaseRouter:
     def add_route(self, route):
         self.routes.append(route)
 
-    def get_route_response(self, scope):
-
-        request = Request(
-            scope,
-            session=Session(scope)
-        )
+    def get_route_response(self, request):
 
         request_path = request.scope['path']
         request_method = request.scope['method'].lower()
 
         if request_method not in self.supported_http_methods:
             return self.server_error_response().response
+
+        cache_backend = get_cache_backend()
+        if cache_backend is not None:
+            cached_value = cache_backend.get(request.url)
+            if cached_value is not  None:
+                return cached_value
 
         for route in self.routes:
 
@@ -63,7 +64,7 @@ class BaseRouter:
             if p_ is not None:
 
                 if hasattr(route.viewset, request_method) is False:
-                    return self.not_implemented_response()
+                    return self.not_implemented_response().response
 
                 return getattr(
                     route.viewset(),

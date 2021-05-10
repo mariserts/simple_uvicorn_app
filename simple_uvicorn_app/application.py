@@ -2,7 +2,9 @@ import sys
 
 from .conf import settings
 from .loader import load_module_class_from_string
+from .http.requests import Request
 from .http.router import Router
+from .http.sessions import Session
 
 
 class BaseApplication:
@@ -14,7 +16,12 @@ class BaseApplication:
 
     async def __call__(self, scope, receive, send):
 
-        response = self.router.get_route_response(scope)
+        request = Request(
+            scope,
+            session=Session(scope)
+        )
+
+        response = self.router.get_route_response(request)
 
         assert scope['type'] == 'http'
 

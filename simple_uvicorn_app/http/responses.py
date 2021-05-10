@@ -17,6 +17,9 @@ class BaseResponse:
         self._headers = headers
         self.response = self._response
 
+    def __repr__(self):
+        return self.response
+
     @property
     def body(self):
 
@@ -61,8 +64,6 @@ class BaseResponse:
             'body': self.body,
         }
 
-    def __call__(self):
-        return self.response
 
 class JsonResponse(BaseResponse):
 
@@ -100,7 +101,9 @@ class ServerErrorResponse(BaseResponse):
         return str.encode(f'{self._status} Server error')
 
 
+
 class NotImplementedResponse(BaseResponse):
+
     def __init__(self):
         self._status = 501
         message = f'{self._status} Request method is not implemented'
