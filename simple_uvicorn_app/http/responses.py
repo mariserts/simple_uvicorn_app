@@ -15,6 +15,7 @@ class BaseResponse:
         self._body = body
         self._status = status
         self._headers = headers
+        self.response = self._response
 
     @property
     def body(self):
@@ -53,7 +54,7 @@ class BaseResponse:
         return headers
 
     @property
-    def response(self):
+    def _response(self):
         return {
             'status': self.status,
             'headers': self.headers,
@@ -77,6 +78,7 @@ class TemplateResponse(BaseResponse):
         self.context = context
         self._status = status
         self._headers = headers
+        self.response = self._response
 
     @property
     def body(self):

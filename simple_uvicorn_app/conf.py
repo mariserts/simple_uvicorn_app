@@ -1,5 +1,14 @@
 class Settings:
 
+    # CACHE
+
+    CACHE_BACKEND = (
+        'simple_uvicorn_app.cache.backends.simple.SimpleCacheBackend')
+
+    DEFAULT_TIMEOUT = 300
+
+    # TEMPLATES
+
     JINJA2_EXTENSIONS = []
     TEMPLATE_DIRS = ['templates']
 
@@ -16,6 +25,10 @@ class Settings:
             'put',
             'trace',
         ]
+
+    @property
+    def SUA_CACHE_KEY_NAME(self):
+        return 'CACHE'
 
 
 settings =  Settings()

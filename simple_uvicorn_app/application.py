@@ -1,7 +1,8 @@
 import sys
 
-from .http.router import Router
 from .conf import settings
+from .loader import load_module_class_from_string
+from .http.router import Router
 
 
 class BaseApplication:
@@ -67,6 +68,13 @@ class BaseApplication:
 
         # Extend jinja2 extensions
         settings.JINJA2_EXTENSIONS += self.EXTRA_JINJA2_EXTENSIONS
+
+        # Set cache
+        setattr(
+            settings,
+            settings.SUA_CACHE_KEY_NAME,
+            load_module_class_from_string(settings.CACHE_BACKEND)()
+        )
 
 
 class Application(BaseApplication):
