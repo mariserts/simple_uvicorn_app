@@ -5,6 +5,14 @@ from simple_uvicorn_app.views import viewsets
 
 class HomeView(viewsets.Viewset):
 
-    @cached_response(10)
     def get(self, request, language=None):
+        print('Home with no caching')
+        return TemplateResponse(template='project/base.html', context={})
+
+
+class HomeWithLanguageView(viewsets.Viewset):
+
+    @cached_response(2)
+    def get(self, request, language=None):
+        print('Home with caching')
         return TemplateResponse(template='project/base.html', context={})

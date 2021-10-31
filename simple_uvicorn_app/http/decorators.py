@@ -6,7 +6,9 @@ from ..cache.utils import get_cache_backend
 
 
 def cached_response(timeout=cache_settings.DEFAULT_TIMEOUT):
+
     def wrapper(method):
+
         @wraps(method)
         def wrapped(self, request, *method_args, **method_kwargs):
 
@@ -30,4 +32,5 @@ def cached_response(timeout=cache_settings.DEFAULT_TIMEOUT):
             return response
 
         return wrapped
+
     return wrapper

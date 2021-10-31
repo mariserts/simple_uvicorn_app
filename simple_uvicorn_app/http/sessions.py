@@ -1,11 +1,6 @@
 import uuid
 
 
-__all__ = [
-    'Session'
-]
-
-
 class BaseSession:
 
     def __init__(self, scope):

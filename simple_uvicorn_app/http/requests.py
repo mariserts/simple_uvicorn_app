@@ -1,8 +1,3 @@
-__all__ = [
-    'Request'
-]
-
-
 class BaseRequest:
     def __init__(self, scope, session=None):
         self._session = session

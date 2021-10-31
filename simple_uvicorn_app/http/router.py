@@ -6,23 +6,17 @@ from .conf import settings
 from .responses import NotImplementedResponse, ServerErrorResponse
 
 
+class BaseRoute:
 
-__all__ = [
-    'BaseRouter',
-    'Route',
-    'Router',
-]
-
-
-class Route:
-    def __init__(self, regexp, viewset):
+    def __init__(self, regexp, viewset, cache=False):
+        self.cache = False
         self.regexp = regexp
         self.viewset = viewset
 
 
 class BaseRouter:
 
-    routes = []
+    routes = {}
 
     def __init__(self):
         pass
@@ -40,7 +34,7 @@ class BaseRouter:
         return settings.SUPPORTED_HTTP_METHODS
 
     def add_route(self, route):
-        self.routes.append(route)
+        self.routes[route.regexp] = route
 
     def get_route_response(self, request):
 
@@ -56,9 +50,9 @@ class BaseRouter:
             if cached_value is not  None:
                 return cached_value
 
-        for route in self.routes:
+        for regex, route in self.routes.items():
 
-            r_ = re.compile(route.regexp)
+            r_ = re.compile(regex)
             p_ = r_.match(request_path)
 
             if p_ is not None:
@@ -72,6 +66,10 @@ class BaseRouter:
                 )(request, **p_.groupdict()).response
 
         return self.server_error_response().response
+
+
+class Route(BaseRoute):
+    pass
 
 
 class Router(BaseRouter):

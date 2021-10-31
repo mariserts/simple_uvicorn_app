@@ -2,7 +2,7 @@ import os
 
 from simple_uvicorn_app.http.router import Route
 
-from .views import HomeView
+from .views import HomeView, HomeWithLanguageView
 
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -14,6 +14,6 @@ TEMPLATE_DIRS = [
 ]
 
 ROUTES = [
-    Route(r'^\/(?P<language>[a-z]*)\/$', HomeView),
-    Route(r'', HomeView)
+    Route(r'^\/(?P<language>[a-z]*)\/$', HomeWithLanguageView),
+    Route(r'^\/?$', HomeView)
 ]
