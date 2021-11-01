@@ -8,7 +8,7 @@ from .responses import NotImplementedResponse, ServerErrorResponse
 
 class BaseRoute:
 
-    def __init__(self, regexp, viewset, cache=False):
+    def __init__(self, regexp, viewset, cache=False, timeout=0):
         self.cache = False
         self.regexp = regexp
         self.viewset = viewset
@@ -50,9 +50,9 @@ class BaseRouter:
             if cached_value is not  None:
                 return cached_value
 
-        for regex, route in self.routes.items():
+        for pattern, route in self.routes.items():
 
-            r_ = re.compile(regex)
+            r_ = re.compile(pattern)
             p_ = r_.match(request_path)
 
             if p_ is not None:

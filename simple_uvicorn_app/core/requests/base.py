@@ -1,6 +1,6 @@
 class BaseRequest:
-    def __init__(self, scope, session=None):
-        self._session = session
+
+    def __init__(self, scope):
         self._scope = scope
         self._url = None
 
@@ -20,9 +20,7 @@ class BaseRequest:
             scope = self.scope
 
             scheme = scope['scheme']
-
             host = scope['headers'][0][1].decode('utf-8')
-
             path = scope['raw_path'].decode('utf-8')
 
             query_string = scope['query_string'].decode('utf-8')
@@ -35,7 +33,3 @@ class BaseRequest:
             self._url += f'{query_string}'
 
         return self._url
-
-
-class Request(BaseRequest):
-    pass

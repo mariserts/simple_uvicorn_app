@@ -4,22 +4,19 @@ from .conf import settings
 from .loader import load_module_class_from_string
 from .http.requests import Request
 from .http.router import Router
-from .http.sessions import Session
 
 
 class BaseApplication:
 
     def __init__(self, extra_settings):
+        self.settings = settings
         self.router = Router()
         self.extra_settings = extra_settings
         self.load_application()
 
     async def __call__(self, scope, receive, send):
 
-        request = Request(
-            scope,
-            session=Session(scope)
-        )
+        request = Request(scope)
 
         response = self.router.get_route_response(request)
 
@@ -71,16 +68,16 @@ class BaseApplication:
             self.router.add_route(route)
 
         # Extend templates
-        settings.TEMPLATE_DIRS += self.EXTRA_SETTINGS_TEMPLATE_DIRS
+        self.settings.TEMPLATE_DIRS += self.EXTRA_SETTINGS_TEMPLATE_DIRS
 
         # Extend jinja2 extensions
-        settings.JINJA2_EXTENSIONS += self.EXTRA_JINJA2_EXTENSIONS
+        self.settings.JINJA2_EXTENSIONS += self.EXTRA_JINJA2_EXTENSIONS
 
         # Set cache
         setattr(
-            settings,
-            settings.SUA_CACHE_KEY_NAME,
-            load_module_class_from_string(settings.CACHE_BACKEND)()
+            self.settings,
+            self.settings.SUA_CACHE_KEY_NAME,
+            load_module_class_from_string(self.settings.CACHE_BACKEND)()
         )
 
 
