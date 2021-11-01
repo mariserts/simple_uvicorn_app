@@ -1,3 +1,8 @@
+import re
+
+from ..responses.error_response import ServerErrorResponse
+
+
 class BaseRoute:
 
     def __init__(self, regexp, viewset, cache=False, timeout=0):
@@ -24,24 +29,21 @@ class BaseRouter:
             r_ = re.compile(pattern)
             p_ = r_.match(request_path)
             if p_ is not None:
-                return route
+                return (route, p_)
 
-        return None   # TODO: Exception required if None
+        raise KeyError(f'Route for "{request_path}" is not found')
 
     def get_response(self, request):
 
         request_path = request.scope['path']
         request_method = request.scope['method'].lower()
 
-        cache_backend = get_cache_backend()
-        if cache_backend is not None:
-            cached_value = cache_backend.get(request.url)
-            if cached_value is not  None:
-                return cached_value
-
-        route = self.find_route(request)
+        try:
+            route, kwargs = self.find_route(request)
+        except KeyError:
+            return ServerErrorResponse()
 
         return getattr(
             route.viewset(),
             request_method
-        )(request, **p_.groupdict()).response
+        )(request, **kwargs.groupdict()).response

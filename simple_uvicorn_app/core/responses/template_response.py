@@ -1,4 +1,5 @@
 from .base import BaseResponse
+from ..templates.template import Template
 
 
 class TemplateResponse(BaseResponse):
@@ -10,7 +11,7 @@ class TemplateResponse(BaseResponse):
         self.context = context
         self._status = status
         self._headers = headers
-        self.response = self._response
+        self.response = self.get_response()
 
     @property
     def body(self):

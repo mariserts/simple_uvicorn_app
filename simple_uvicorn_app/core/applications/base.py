@@ -19,7 +19,7 @@ class BaseApplication:
 
         request = Request(scope)
 
-        response = self.router.get_route_response(request)
+        response = self.router.get_response(request)
 
         assert scope['type'] == 'http'
 
@@ -52,7 +52,7 @@ class BaseApplication:
 
     @property
     def EXTRA_JINJA2_EXTENSIONS(self):
-        return getattr(self.extra_settings, 'EXTRA_JINJA2_EXTENSIONS', [])
+        return getattr(self.extra_settings, 'JINJA2_EXTENSIONS', [])
 
     def load_application(self):
 
@@ -73,10 +73,3 @@ class BaseApplication:
 
         # Extend jinja2 extensions
         self.settings.JINJA2_EXTENSIONS += self.EXTRA_JINJA2_EXTENSIONS
-
-        # Set cache
-        setattr(
-            self.settings,
-            self.settings.SUA_CACHE_KEY_NAME,
-            load_module_class_from_string(self.settings.CACHE_BACKEND)()
-        )
